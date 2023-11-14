@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 
-const Login = () => {
+const Login = (props) => {
   const [email, setEmail] = useState('');
+  const [flag, setFlag] = useState('false');
   const [password, setPassword] = useState('');
-
+  
   const [vaildMail, setVaildMail] = useState(true);
 
   const validateMail = () => {
@@ -24,7 +20,8 @@ const Login = () => {
       const result = validateMail(email);
       if (result) {
         if (password.length > 0) {
-          console.warn('Logged In');
+          setData()
+          //setData();
         } else {
           console.warn('Type a password first');
         }
@@ -34,6 +31,47 @@ const Login = () => {
     } else {
       console.warn('Email Is Missing');
     }
+    
+  };
+
+  const setData = async () => {
+    try {
+      props.navigation.navigate('signup')
+      //onsole.log('KKKK', isLogged);
+      //setIsLogged('true');      
+      const jsonValue = JSON.stringify('true');
+      await AsyncStorage.setItem('Loginstatus', jsonValue);
+      
+      // await AsyncStorage.removeItem('Loginstatus');
+    } catch (err) {
+      console.log('STORAGE ERROR1', err);
+    }
+  };
+
+  const Logout = async () => {
+
+    try {
+       console.log('logout');
+      // setIsLogged('false');
+      await AsyncStorage.removeItem('Loginstatus');
+    } catch (Error) {
+      console.log('Error In Logout', Error);
+    }
+  };
+
+  const getData = async () => {
+    // console.log('falg', flag);
+    // console.log('islogged', isLogged);
+    try {
+      const result = await AsyncStorage.getItem('Loginstatus');
+      console.log('Data :', JSON.parse(result));
+    } catch (err) {
+      console.log('STORAGE ERROR2', err);
+    }
+  };
+
+  const fetchData = () => {
+    getData();
   };
 
   // const handleCheckPassword=()=>{
@@ -85,6 +123,8 @@ const Login = () => {
             onPress={() => handleCheckMail()}
             title="Click Here To Login"
           />
+          <Button onPress={() => fetchData()} title="Click Here To Console" />
+          <Button onPress={() => Logout()} title="LOGOUT" />
         </View>
       </View>
     </View>
@@ -122,7 +162,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
-    borderRadius:20
+    borderRadius: 20,
   },
 });
 

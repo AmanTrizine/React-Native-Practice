@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import {Button, Text, View,Linking,Image} from 'react-native'
+import {Button, Text, View,Linking,Image,Alert} from 'react-native'
 import { request,PERMISSIONS,check } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = (props) => {
   const [permit,setPermit]=useState("")
@@ -75,6 +75,30 @@ const tryCamera=async()=>{
   }
 }
 
+const getData = async () => {
+  // console.log('falg', flag);
+  // console.log('islogged', isLogged);
+  try {
+    const result = await AsyncStorage.getItem('Loginstatus');
+    console.log('Data From Home :', JSON.parse(result));
+  } catch (err) {
+    console.log('STORAGE ERROR2', err);
+  }
+};
+const Logout = async () => {
+
+  try {
+     console.log('logout');
+    // Alert.alert("Type something","pppppppppppp")
+    // setIsLogged('false');
+     props.navigation.navigate('Login')
+    await AsyncStorage.removeItem('Loginstatus');
+   
+  } catch (Error) {
+    console.log('Error In Logout', Error);
+  }
+};
+
 
 const fromGallary=async()=>{
   try{
@@ -87,10 +111,11 @@ const fromGallary=async()=>{
   }
 }
 
+
   return (
     <View style={{justifyContent:"center",alignItems:"center",width:"100%",height:"100%"}}>
       <Text style={{fontSize:30,color:"black"}}>HOME SCREEN</Text>
-      <View style={{width:"70%",marginTop:30}}>
+      {/* <View style={{width:"70%",marginTop:30}}>
         <Button title='REQUEST PERMISSION' onPress={requestPermission}/>
       </View>
       <View style={{width:"70%",marginTop:30}}>
@@ -99,6 +124,10 @@ const fromGallary=async()=>{
 
       <View style={{width:"70%",marginTop:30}}>
         <Button title='UPLOAD DOCS' onPress={uploadDocuments}/>
+      </View> */}
+      <Button onPress={() => getData()} title="Click Here To Console" />
+       <View style={{width:"70%",marginTop:30}}>
+        <Button title='Logout' onPress={Logout}/>
       </View>
        <Image
               source={{uri:imageUri}}
@@ -111,6 +140,9 @@ const fromGallary=async()=>{
 
       <View style={{width:"70%",marginTop:30}}>
         <Button title='Choose From Gallary' onPress={fromGallary}/>
+      </View>
+      <View style={{width:"70%",marginTop:30}}>
+        <Button title='GO TO DRAWER' onPress={()=>props.navigation.navigate("DRAWER")}/>
       </View>
       {/* <View>
         <Text  >

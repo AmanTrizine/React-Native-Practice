@@ -17,7 +17,7 @@ const api = () => {
 
   instance.interceptors.response.use(
     response => {
-      console.log('Interceptor response', response);
+      //console.log('Interceptor response', response);
       return response;
     },
     error => {

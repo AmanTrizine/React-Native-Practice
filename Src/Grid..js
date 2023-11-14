@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Button, FlatList} from 'react-native';
 import axios from 'axios';
 import api from './Utilities';
-const GridComp = () => {
+const GridComp = (props) => {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -14,13 +14,14 @@ const GridComp = () => {
     //   error => Promise.reject(error),
     // );
     try {
-      const result = await api().get('/products/1');
-      console.log('XXXXXXXxxx', result.status);
-      // setData(result.data.products)
+      const result = await api().get('/products');
+      //console.log('XXXXXXXxxx', result.data.products);
+      setData(result.data.products)
     } catch (err) {
       console.log('DDD', err);
     }
   };
+
 
   const handleClick = () => {
     fetchData();
@@ -36,6 +37,7 @@ const GridComp = () => {
         <Text style={Styles.box}>Arav</Text>
         <Text style={Styles.box1}>Raj</Text>
       </View> */}
+      <Button title='Go To Home' onPress={()=>props.navigation.navigate('HOME')}/>
       <FlatList
         data={data}
         renderItem={({item}) => (
